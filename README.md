@@ -1,6 +1,6 @@
 # solid-hash
 
-Using Solid to store IPFS Hash privately or publicly.
+Using [Solid](https://solid.inrupt.com) to store [IPFS](https://ipfs.io) Hash privately or publicly.
 
 ## Install
 
