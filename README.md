@@ -1,4 +1,4 @@
-# solid-hash
+# solid-ipfs
 
 Using [Solid](https://solid.inrupt.com) to store [IPFS](https://ipfs.io) Hash privately or publicly.
 
