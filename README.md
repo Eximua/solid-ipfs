@@ -56,6 +56,9 @@ main();
 
 ### Public path example
 
+1. [https://alicea.solid.authing.cn/profile/](https://alicea.solid.authing.cn/profile/)
+2. [https://alicea.solid.authing.cn/public/](https://alicea.solid.authing.cn/public/)
+
 ```javascript
 import SolidIPFS from 'solid-ipfs';
 
@@ -73,9 +76,6 @@ const main = async () => {
 
 main();
 ```
-
-1. [https://alicea.solid.authing.cn/profile/](https://alicea.solid.authing.cn/profile/)
-2. [https://alicea.solid.authing.cn/public/](https://alicea.solid.authing.cn/public/)
 
 ## Using with [Authing](https://authing.cn)
 
