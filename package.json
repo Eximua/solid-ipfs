@@ -1,0 +1,27 @@
+{
+  "name": "solid-ipfs",
+  "version": "0.0.1",
+  "description": "Using Solid to store IPFS Hash privately",
+  "main": "dist/solid-ipfs-browser.min.js",
+  "browser": "dist/solid-ipfs-browser.min.js",
+  "unpkg": "dist/solid-ipfs-browser.min.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Eximua/solid-ipfs.git"
+  },
+  "keywords": [
+    "solid",
+    "ipfs",
+    "authing",
+    "hash"
+  ],
+  "author": "xieyang@dodora.cn",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Eximua/solid-ipfs/issues"
+  },
+  "homepage": "https://github.com/Eximua/solid-ipfs#readme"
+}
