@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Solid IPFS test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    
+    <!-- <script src="/src/solid-file-client.js"></script> -->
+    <script src="/dist/solid-ipfs-browser.min.js?v=3"></script>
+
+    <script>
+
+        const main = async () => {
+            const solidIpfs = new SolidIPFS({
+                inboxUrl: 'https://alicea.solid.authing.cn/inbox/',
+            });
+
+            await solidIpfs.getAuthingInsatance();
+
+            const result = await solidIpfs.storeHash({
+                hash: 'xxxxxxaaa',
+            });
+
+            console.log(result);
+        }
+
+        main();
+
+    </script>
+</body>
+</html>

@@ -1,50 +1,69 @@
-import ipfsClient from 'ipfs-http-client';
-import streamBuffers from 'stream-buffers';
 import $rdf from 'rdflib';
 import SolidAuthing from 'solid-authing';
 import SolidFileClient from './solid-file-client.js';
+import solid from 'solid-auth-client';
 
-class SolidIPFS {
+var SolidIPFS = function(options) {
+  this.$rdf = $rdf;
+  this.options = options;
+  this.solidAuthing = null;
 
-  constructor(options) {
-    this.ipfsClient = ipfsClient;
-    this.$rdf = $rdf;
-
-    this.ipfs = this.ipfsClient('127.0.0.1', '5001', { protocol: 'http' });
-
+  if (this.options.clientId && this.options.secret) {
     this.solidAuthing = new SolidAuthing({
-      clientId: '5b66984419915500015f1371',
-      secret: 'a153e760bf333da7342cf83e18b1d26f',
-    });
-
-    this.fileClient = new SolidFileClient();
-
-    this.options = options;
-    // https://alicea.solid.authing.cn/inbox/
+      clientId: options.clientId,
+      secret: options.secret,
+    });  
   }
+
+  this.fileClient = new SolidFileClient();
+
+  this.IPFSFolderName = 'ipfs';
+  this.IPFSHashFolderName = 'hash';
+
+  this.IPFSTopFolder = `${this.options.inboxUrl}${this.IPFSFolderName}/`;
+  this.IPFSHashFolder = `${this.IPFSTopFolder}${this.IPFSHashFolderName}/`;
+}
+
+SolidIPFS.prototype = {
 
   async getAuthingInsatance() {
-    this.solidAuth = await this.solidAuthing.getAuthingInsatance(); //必须调用
-  }
+    if (this.solidAuthing) {
+      this.solidAuth = await this.solidAuthing.getAuthingInsatance(); //必须调用
+    } else {
+      this.solidAuth = solid;
+    }
+  },
 
-  async checkIPFSFolderExists() {
-    const exists = await this.fileClient.readFolder(`${this.options.webId}/ipfs/hash`);
+  async checkIPFSFolderExists(folderName) {
+    const exists = await this.fileClient.readFolder(folderName);
     return exists;
-  }
+  },
 
-  async createIPFSHashFolder() {
-    const exists = this.checkIPFSFolderExists();
-    if (exists) {
-      return false;
+  async createIPFSFolder() {
+    const topFolderExists = await this.checkIPFSFolderExists(this.IPFSTopFolder);
+    const hashFolderExists = await this.checkIPFSFolderExists(this.IPFSHashFolder);
+
+    if (topFolderExists && hashFolderExists) {
+        return true;
     }
 
-    try {
-      const createResult = await this.fileClient.createFolder(`${this.options.webId}/ipfs/hash`);
-      return createResult;
-    } catch (error) {
-      throw error;
+    if (!topFolderExists) {
+        const topFolderCreateResult = await this.fileClient.createFolder(this.IPFSTopFolder);
+        if (!topFolderCreateResult) {
+            return false;
+        } else {
+            const hashFolderCreateResult = await this.fileClient.createFolder(this.IPFSHashFolder);
+            return hashFolderCreateResult;
+        }
+    } else {
+        if (hashFolderExists) {
+            return true;
+        } else {
+            const hashFolderCreateResult = await this.fileClient.createFolder(this.IPFSHashFolder);
+            return hashFolderCreateResult;
+        }
     }
-  }
+  },
 
   async storeHash(options) {
 
@@ -52,61 +71,32 @@ class SolidIPFS {
       throw "请提供 hash 值";
     }
 
-    if (!this.options.webId) {
-      throw "请提供 WebId";
+    if (!this.options.inboxUrl) {
+      throw "请提供 inboxUrl";
     }
 
     await this.solidAuth.login();
 
-    const createFileResult = await this.fileClient.createFile( newFile );
-    const updateFileResult = await this.fileClient.updateFile( newFile, newContent );
-    
-    const link = '<http://www.w3.org/ns/ldp#Resource>; rel="type"';
-    const storeResult = await this.solidAuth.solid.fetch(options.webId, {
-      method : 'POST',
-      headers : {
-        'Content-Type': 'text/plain',
-        slug: 'hash',
-        link,
-      },
-      body: hash,
-    });
+    const exists = await this.checkIPFSFolderExists();
+    let createFileResult = null;
 
-    return storeResult;
-  }
+    if (exists) {
+        createFileResult = await this.fileClient.createFile(`${this.IPFSHashFolder}${options.hash}.txt`, 'text/plain', options.hash);
+    } else {
+        const createResult = await this.createIPFSFolder();
+        if (createResult) {
+            createFileResult = await this.fileClient.createFile(`${this.IPFSHashFolder}${options.hash}.txt`, 'text/plain', options.hash);
+        } else {
+            return false;
+        }
+    }
 
-  uploadFilesToIPFS(fileArrayBuffer) {
-    return new Promise((resolve) => {
-      // 创建 IPFS 读写文件的流，这是一个 Duplex 流，可读可写
-      this.stream = this.ipfs.addReadableStream();
-      // 文件上传完毕后 resolve 这个 Promise
-      this.stream.on('data', (file) => resolve(file));
+    return createFileResult;
+  },
+}
 
-      const myReadableStreamBuffer = new streamBuffers.ReadableStreamBuffer({
-        chunkSize: 25000, // 决定了传输速率
-      });
-      myReadableStreamBuffer.on('data', (chunk) => {
-        myReadableStreamBuffer.resume();
-      });                    
-
-      // 对接好两个流，并开始上传
-      this.stream.write(myReadableStreamBuffer);
-      myReadableStreamBuffer.put(Buffer.from(fileArrayBuffer));
-
-      // 上传完毕后关闭流
-      myReadableStreamBuffer.on('end', () => this.stream.end());
-      myReadableStreamBuffer.stop();
-    });
-  }
-
-  readFile(file) {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.onload = event => resolve(this.uploadIPFS(event.target.result));
-      fileReader.onerror = reject;
-      fileReader['readAsArrayBuffer'](file);
-    });
-  }  
+if (typeof window === 'object') {
+	window.SolidIPFS = SolidIPFS;
 }
 
 export default SolidIPFS;

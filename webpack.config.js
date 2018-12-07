@@ -3,7 +3,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const webConfig = {
 	target: 'web',
 	mode: 'development',
-	entry: ['babel-polyfill', './src/index.js'],
+	entry: ['./src/index.js'],
 	output: {
 		libraryTarget: 'umd',
 		path: __dirname + '/dist',
@@ -32,7 +32,7 @@ const webConfig = {
 const webMinConfig = {
 	target: 'web',
 	mode: 'production',
-	entry: ['babel-polyfill', './src/index.js'],
+	entry: ['./src/index.js'],
 	output: {
 		libraryTarget: 'umd',
 		path: __dirname + '/dist',
