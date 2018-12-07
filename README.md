@@ -79,7 +79,7 @@ main();
 
 ## Using with [Authing](https://authing.cn)
 
-Authing is an identity for EVERYONE and EVERYTHING, which likes Auth0.
+[Authing](https://authing.cn) is an identity for EVERYONE and EVERYTHING, which likes Auth0.
 
 We have integrated authing so that you can see statistics in the Authing dashboard after logging in/registering solid.
 
