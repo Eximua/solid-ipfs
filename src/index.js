@@ -12,7 +12,9 @@ var SolidIPFS = function(options) {
     this.solidAuthing = new SolidAuthing({
       clientId: options.clientId,
       secret: options.secret,
-    });  
+    });
+  } else {
+    this.initInstance();
   }
 
   this.fileClient = new SolidFileClient();
@@ -20,13 +22,13 @@ var SolidIPFS = function(options) {
   this.IPFSFolderName = 'ipfs';
   this.IPFSHashFolderName = 'hash';
 
-  this.IPFSTopFolder = `${this.options.inboxUrl}${this.IPFSFolderName}/`;
+  this.IPFSTopFolder = `${this.options.url}${this.IPFSFolderName}/`;
   this.IPFSHashFolder = `${this.IPFSTopFolder}${this.IPFSHashFolderName}/`;
 }
 
 SolidIPFS.prototype = {
 
-  async getAuthingInsatance() {
+  async initInstance() {
     if (this.solidAuthing) {
       this.solidAuth = await this.solidAuthing.getAuthingInsatance(); //必须调用
     } else {
@@ -71,8 +73,8 @@ SolidIPFS.prototype = {
       throw "请提供 hash 值";
     }
 
-    if (!this.options.inboxUrl) {
-      throw "请提供 inboxUrl";
+    if (!this.options.url) {
+      throw "请提供 url";
     }
 
     await this.solidAuth.login();

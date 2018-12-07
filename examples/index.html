@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
+
+    <h1>请将代码中的 inboxUrl 换成你自己的地址然后打开控制台查看结果</h1>
     
     <!-- <script src="/src/solid-file-client.js"></script> -->
     <script src="/dist/solid-ipfs-browser.min.js?v=3"></script>
@@ -15,16 +17,14 @@
 
         const main = async () => {
             const solidIpfs = new SolidIPFS({
-                inboxUrl: 'https://alicea.solid.authing.cn/inbox/',
+                url: 'https://alicea.solid.authing.cn/inbox/',
             });
-
-            await solidIpfs.getAuthingInsatance();
 
             const result = await solidIpfs.storeHash({
-                hash: 'xxxxxxaaa',
+                hash: 'xxxxxxaaaaaa',
             });
 
-            console.log(result);
+            console.log(result, result ? '保存成功' : '保存失败');
         }
 
         main();

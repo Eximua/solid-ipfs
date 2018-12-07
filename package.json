@@ -1,6 +1,6 @@
 {
   "name": "solid-ipfs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Using Solid to store IPFS Hash privately",
   "main": "dist/solid-ipfs-browser.min.js",
   "browser": "dist/solid-ipfs-browser.min.js",
