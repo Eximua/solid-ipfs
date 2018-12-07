@@ -59,7 +59,8 @@ class SolidIPFS {
     await this.solidAuth.login();
 
     const createFileResult = await this.fileClient.createFile( newFile );
-
+    const updateFileResult = await this.fileClient.updateFile( newFile, newContent );
+    
     const link = '<http://www.w3.org/ns/ldp#Resource>; rel="type"';
     const storeResult = await this.solidAuth.solid.fetch(options.webId, {
       method : 'POST',
