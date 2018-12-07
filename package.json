@@ -23,5 +23,11 @@
   "bugs": {
     "url": "https://github.com/Eximua/solid-ipfs/issues"
   },
-  "homepage": "https://github.com/Eximua/solid-ipfs#readme"
+  "homepage": "https://github.com/Eximua/solid-ipfs#readme",
+  "dependencies": {
+    "ipfs-http-client": "^27.1.0",
+    "rdflib": "^0.19.1",
+    "solid-authing": "^0.0.2",
+    "stream-buffers": "^3.0.2"
+  }
 }
