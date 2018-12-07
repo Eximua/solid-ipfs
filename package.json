@@ -27,6 +27,7 @@
   "dependencies": {
     "ipfs-http-client": "^27.1.0",
     "rdflib": "^0.19.1",
+    "solid-auth-client": "^2.2.14",
     "solid-authing": "^0.0.2",
     "stream-buffers": "^3.0.2"
   }
