@@ -2,6 +2,7 @@ import ipfsClient from 'ipfs-http-client';
 import streamBuffers from 'stream-buffers';
 import $rdf from 'rdflib';
 import SolidAuthing from 'solid-authing';
+import SolidFileClient from './solid-file-client.js';
 
 class SolidIPFS {
 
@@ -10,10 +11,13 @@ class SolidIPFS {
     this.$rdf = $rdf;
 
     this.ipfs = this.ipfsClient('127.0.0.1', '5001', { protocol: 'http' });
+
     this.solidAuthing = new SolidAuthing({
       clientId: '5b66984419915500015f1371',
       secret: 'a153e760bf333da7342cf83e18b1d26f',
     });
+
+    this.fileClient = new SolidFileClient();
 
     this.options = options;
     // https://alicea.solid.authing.cn/inbox/
@@ -21,6 +25,25 @@ class SolidIPFS {
 
   async getAuthingInsatance() {
     this.solidAuth = await this.solidAuthing.getAuthingInsatance(); //必须调用
+  }
+
+  async checkIPFSFolderExists() {
+    const exists = await this.fileClient.readFolder(`${this.options.webId}/ipfs/hash`);
+    return exists;
+  }
+
+  async createIPFSHashFolder() {
+    const exists = this.checkIPFSFolderExists();
+    if (exists) {
+      return false;
+    }
+
+    try {
+      const createResult = await this.fileClient.createFolder(`${this.options.webId}/ipfs/hash`);
+      return createResult;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async storeHash(options) {
@@ -34,6 +57,8 @@ class SolidIPFS {
     }
 
     await this.solidAuth.login();
+
+    const createFileResult = await this.fileClient.createFile( newFile );
 
     const link = '<http://www.w3.org/ns/ldp#Resource>; rel="type"';
     const storeResult = await this.solidAuth.solid.fetch(options.webId, {
