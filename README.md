@@ -2,6 +2,8 @@
 
 Using [Solid](https://solid.inrupt.com) to store [IPFS](https://ipfs.io) Hash privately or publicly.
 
+You need to have a solid account to use solid-ipfs. If you don't already have one, please click [here](https://solid.authing.cn) to register.
+
 ## Install
 
 ```shell
@@ -30,7 +32,7 @@ main();
 
 Then you can get IPFS hash list via `<YOURL_SOLID_URL>/ipfs/hash/`.
 
-If you don't have a solid account, please click [here](https://solid.authing.cn) to register
+If you don't have a solid account, please click [here](https://solid.authing.cn) to register.
 
 In Solid, the path with the suffix `inbox` is a private data storage area. Others are `public` and `profile`, all publicly accessible. So if you want to privatize the store, use `inbox` , otherwise you can choose `public` or `profile`.
 
